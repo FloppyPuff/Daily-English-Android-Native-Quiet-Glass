@@ -21,7 +21,7 @@
   专注面板统一半透明/描边语言。
 - JVM 49/49 通过，APK 构建成功。
 - 原型 APK：`C:\Users\fjh28\Desktop\Daily-English-Glass-1.1.0-quietglass-debug.apk`
-  SHA-256 `c80d6fe2b071fbf193d08bf93d3eb702b6130f8b63cc6de543e00ba2cbf7dfdf`
+  SHA-256 `3e8637f84009858926801f6d3cf2cd593015f25f11995412ef70f849a34463a0`
 
 ## 待做
 

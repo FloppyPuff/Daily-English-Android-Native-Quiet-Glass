@@ -41,6 +41,6 @@ cd Quiet-Glass-Daily-English
 - 功能与 1.0.2 一致；JVM 49/49 通过。
 - 原型 APK：
   `C:\Users\fjh28\Desktop\Daily-English-Glass-1.1.0-quietglass-debug.apk`
-  SHA-256 `c80d6fe2b071fbf193d08bf93d3eb702b6130f8b63cc6de543e00ba2cbf7dfdf`
+  SHA-256 `3e8637f84009858926801f6d3cf2cd593015f25f11995412ef70f849a34463a0`
 - 真机安装与视觉复核待设备重新连接。
 - B 方案仅存档，未实现。

@@ -70,7 +70,7 @@ private fun DrawScope.drawRadial(color: Color, center: Offset, radius: Float) {
 @Composable
 fun glassSurfaceColor(): Color {
   val dark = isSystemInDarkTheme()
-  return if (dark) Color(0xFF161C17).copy(alpha = 0.82f) else Color.White.copy(alpha = 0.78f)
+  return MaterialTheme.colorScheme.surface.copy(alpha = if (dark) 0.82f else 0.78f)
 }
 
 @Composable
