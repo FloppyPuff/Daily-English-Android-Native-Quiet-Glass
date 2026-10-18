@@ -1,5 +1,6 @@
 package com.dailyenglish.nativeapp.feature.study
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -52,6 +53,7 @@ import com.dailyenglish.nativeapp.core.learning.Statistics
 import com.dailyenglish.nativeapp.core.model.AppState
 import com.dailyenglish.nativeapp.data.content.WordDto
 import com.dailyenglish.nativeapp.theme.NumberStyle
+import com.dailyenglish.nativeapp.theme.glassBorderBrush
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -102,8 +104,10 @@ fun TodayScreen(
     item { ExamSwitch(ui.progress.settings.exam, onExam) }
     item {
       Card(
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.82f)),
         shape = MaterialTheme.shapes.extraLarge,
+        border = BorderStroke(1.dp, glassBorderBrush()),
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
         modifier = Modifier.fillMaxWidth(),
       ) {
         Column(Modifier.padding(22.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
@@ -147,6 +151,8 @@ fun TodayScreen(
       Card(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         shape = MaterialTheme.shapes.large,
+        border = BorderStroke(1.dp, glassBorderBrush()),
+        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
         modifier = Modifier.fillMaxWidth(),
       ) {
         Row(Modifier.padding(20.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -267,6 +273,8 @@ private fun PracticeCard(title: String, caption: String, icon: ImageVector, onCl
     onClick = onClick,
     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
     shape = MaterialTheme.shapes.large,
+    border = BorderStroke(1.dp, glassBorderBrush()),
+    elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
     modifier = Modifier.fillMaxWidth(),
   ) {
     Row(Modifier.padding(20.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -310,6 +318,8 @@ fun ReviewScreen(ui: StudyUiState, onStart: () -> Unit) {
         Card(
           colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
           shape = MaterialTheme.shapes.large,
+          border = BorderStroke(1.dp, glassBorderBrush()),
+          elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
           modifier = Modifier.fillMaxWidth(),
         ) {
           Column(Modifier.padding(22.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -323,6 +333,8 @@ fun ReviewScreen(ui: StudyUiState, onStart: () -> Unit) {
         Card(
           colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
           shape = MaterialTheme.shapes.medium,
+          border = BorderStroke(1.dp, glassBorderBrush()),
+          elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
           modifier = Modifier.fillMaxWidth(),
         ) {
           Row(Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {

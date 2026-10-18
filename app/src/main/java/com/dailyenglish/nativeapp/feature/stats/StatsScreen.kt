@@ -1,6 +1,7 @@
 package com.dailyenglish.nativeapp.feature.stats
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -41,6 +42,7 @@ import com.dailyenglish.nativeapp.feature.study.ExamSwitch
 import com.dailyenglish.nativeapp.feature.study.StudyError
 import com.dailyenglish.nativeapp.feature.study.StudyLoading
 import com.dailyenglish.nativeapp.theme.NumberStyle
+import com.dailyenglish.nativeapp.theme.glassBorderBrush
 import java.util.Calendar
 import kotlin.math.max
 import kotlin.math.roundToInt
@@ -114,6 +116,8 @@ private fun StatCard(item: StatItem, modifier: Modifier) {
   Card(
     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
     shape = MaterialTheme.shapes.large,
+    border = BorderStroke(1.dp, glassBorderBrush()),
+    elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
     modifier = modifier,
   ) {
     Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(3.dp)) {
@@ -132,6 +136,8 @@ private fun WeekPanel(week: List<WeekSlice>, modifier: Modifier) {
   Card(
     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
     shape = MaterialTheme.shapes.large,
+    border = BorderStroke(1.dp, glassBorderBrush()),
+    elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
     modifier = modifier,
   ) {
     Column(Modifier.padding(18.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -171,6 +177,8 @@ private fun MasteryPanel(stats: Statistics, modifier: Modifier) {
   Card(
     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
     shape = MaterialTheme.shapes.large,
+    border = BorderStroke(1.dp, glassBorderBrush()),
+    elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
     modifier = modifier,
   ) {
     Column(Modifier.padding(18.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -207,6 +215,8 @@ private fun HeatmapPanel(heatmap: List<HeatCell>) {
   Card(
     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
     shape = MaterialTheme.shapes.large,
+    border = BorderStroke(1.dp, glassBorderBrush()),
+    elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
     modifier = Modifier.fillMaxWidth(),
   ) {
     Column(Modifier.padding(18.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {

@@ -1,6 +1,7 @@
 package com.dailyenglish.nativeapp.feature.study
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -45,6 +46,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import com.dailyenglish.nativeapp.data.content.SentenceDto
 import com.dailyenglish.nativeapp.theme.NumberStyle
+import com.dailyenglish.nativeapp.theme.glassBorderBrush
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -88,6 +90,8 @@ fun SentencesScreen(
       Card(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         shape = MaterialTheme.shapes.extraLarge,
+        border = BorderStroke(1.dp, glassBorderBrush()),
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
         modifier = Modifier.fillMaxWidth(),
       ) {
         Column(Modifier.padding(22.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {

@@ -28,6 +28,7 @@ import com.dailyenglish.nativeapp.feature.auth.AuthScreen
 import com.dailyenglish.nativeapp.feature.auth.AuthViewModel
 import com.dailyenglish.nativeapp.feature.papers.PapersViewModel
 import com.dailyenglish.nativeapp.feature.study.StudyViewModel
+import com.dailyenglish.nativeapp.theme.QuietBackground
 import com.dailyenglish.nativeapp.ui.navigation.MainNavigation
 
 @Composable
@@ -43,26 +44,28 @@ fun AppRoot(
     studyViewModel.messages.collect { snackbar.showSnackbar(it) }
   }
 
-  when {
-    appState.booting -> SplashScreen()
-    appState.showAuth -> {
-      val authViewModel: AuthViewModel = hiltViewModel()
-      val authState by authViewModel.state.collectAsStateWithLifecycle()
-      AuthScreen(
-        state = authState,
-        onMode = authViewModel::setMode,
-        onEmail = authViewModel::updateEmail,
-        onPassword = authViewModel::updatePassword,
-        onSubmit = authViewModel::submit,
-        onGuest = appViewModel::continueAsGuest,
+  QuietBackground {
+    when {
+      appState.booting -> SplashScreen()
+      appState.showAuth -> {
+        val authViewModel: AuthViewModel = hiltViewModel()
+        val authState by authViewModel.state.collectAsStateWithLifecycle()
+        AuthScreen(
+          state = authState,
+          onMode = authViewModel::setMode,
+          onEmail = authViewModel::updateEmail,
+          onPassword = authViewModel::updatePassword,
+          onSubmit = authViewModel::submit,
+          onGuest = appViewModel::continueAsGuest,
+        )
+      }
+      else -> MainNavigation(
+        studyViewModel = studyViewModel,
+        papersViewModel = papersViewModel,
+        snackbarHostState = snackbar,
+        onLoginRequested = appViewModel::requestAuth,
       )
     }
-    else -> MainNavigation(
-      studyViewModel = studyViewModel,
-      papersViewModel = papersViewModel,
-      snackbarHostState = snackbar,
-      onLoginRequested = appViewModel::requestAuth,
-    )
   }
 }
 

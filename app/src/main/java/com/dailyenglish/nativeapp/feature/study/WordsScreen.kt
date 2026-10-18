@@ -1,5 +1,6 @@
 package com.dailyenglish.nativeapp.feature.study
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -58,6 +59,7 @@ import androidx.compose.ui.unit.dp
 import com.dailyenglish.nativeapp.data.content.WordDto
 import com.dailyenglish.nativeapp.theme.NumberStyle
 import com.dailyenglish.nativeapp.theme.WordHeadwordStyle
+import com.dailyenglish.nativeapp.theme.glassBorderBrush
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -111,6 +113,8 @@ fun WordsScreen(
         Card(
           colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
           shape = MaterialTheme.shapes.large,
+          border = BorderStroke(1.dp, glassBorderBrush()),
+          elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
           modifier = Modifier.fillMaxWidth(),
         ) {
           Column(Modifier.padding(24.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -173,6 +177,8 @@ private fun WordCard(
   Card(
     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
     shape = MaterialTheme.shapes.extraLarge,
+    border = BorderStroke(1.dp, glassBorderBrush()),
+    elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
     modifier = Modifier.fillMaxWidth(),
   ) {
     Column(Modifier.padding(22.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {

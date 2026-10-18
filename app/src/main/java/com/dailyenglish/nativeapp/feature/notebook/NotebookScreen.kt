@@ -1,5 +1,6 @@
 package com.dailyenglish.nativeapp.feature.notebook
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -37,6 +38,7 @@ import com.dailyenglish.nativeapp.core.learning.NotebookSentence
 import com.dailyenglish.nativeapp.core.learning.NotebookWord
 import com.dailyenglish.nativeapp.feature.study.StudyError
 import com.dailyenglish.nativeapp.feature.study.StudyLoading
+import com.dailyenglish.nativeapp.theme.glassBorderBrush
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -131,6 +133,8 @@ private fun WordSection(
   Card(
     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
     shape = MaterialTheme.shapes.large,
+    border = BorderStroke(1.dp, glassBorderBrush()),
+    elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
     modifier = modifier,
   ) {
     Column(Modifier.padding(18.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
@@ -193,6 +197,8 @@ private fun SentenceSection(
   Card(
     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
     shape = MaterialTheme.shapes.large,
+    border = BorderStroke(1.dp, glassBorderBrush()),
+    elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
     modifier = modifier,
   ) {
     Column(Modifier.padding(18.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
@@ -251,6 +257,8 @@ private fun EmptyNotebook(tab: String) {
   Card(
     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
     shape = MaterialTheme.shapes.large,
+    border = BorderStroke(1.dp, glassBorderBrush()),
+    elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
     modifier = Modifier.fillMaxWidth(),
   ) {
     Column(Modifier.padding(22.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {

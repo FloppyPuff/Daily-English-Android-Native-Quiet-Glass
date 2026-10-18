@@ -1,5 +1,6 @@
 package com.dailyenglish.nativeapp.feature.auth
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -34,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import com.dailyenglish.nativeapp.theme.glassBorderBrush
 
 @Composable
 fun AuthScreen(
@@ -70,6 +72,8 @@ fun AuthScreen(
     Card(
       colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
       shape = MaterialTheme.shapes.extraLarge,
+      border = BorderStroke(1.dp, glassBorderBrush()),
+      elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
       modifier = Modifier.fillMaxWidth(),
     ) {
       Column(Modifier.padding(22.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
