@@ -12,11 +12,11 @@ android {
   namespace = "com.dailyenglish.nativeapp"
   compileSdk = 36
   defaultConfig {
-    applicationId = "com.dailyenglish.native"
+    applicationId = "com.dailyenglish.quietglass"
     minSdk = 24
     targetSdk = 36
-    versionCode = 5
-    versionName = "1.0.2"
+    versionCode = 1
+    versionName = "1.1.0-quietglass"
     buildConfigField("String", "API_BASE_URL", "\"https://101.37.23.76:10444/\"")
   }
 
