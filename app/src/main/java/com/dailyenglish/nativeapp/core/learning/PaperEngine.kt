@@ -87,11 +87,13 @@ object PaperEngine {
       rating = rating,
       at = at,
     )
+    // Every shipped paper set is 考研英语, so its history belongs to that track
+    // regardless of the (now merged) study direction.
     val event = StudyEvent(
       type = "paper",
       id = key,
       at = at,
-      exam = state.settings.exam,
+      exam = "postgrad",
       correct = score.correct,
       total = score.total,
     )

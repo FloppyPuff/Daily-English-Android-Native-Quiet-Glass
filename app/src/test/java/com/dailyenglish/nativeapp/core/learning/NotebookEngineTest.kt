@@ -48,9 +48,9 @@ class NotebookEngineTest {
   }
 
   @Test
-  fun filtersByExamAndQuery() {
+  fun mergedNotebookStillSupportsQuery() {
     val saved = NotebookEngine.collect(state.copy(savedWords = listOf("delta")), words, sentences, "saved")
-    assertEquals(0, saved.words.size)
+    assertEquals(listOf("delta"), saved.words.map { it.word.id })
     val search = NotebookEngine.collect(state, words, sentences, "saved", query = "阿尔")
     assertEquals(listOf("alpha"), search.words.map { it.word.id })
     val sentenceSearch = NotebookEngine.collect(state, words, sentences, "saved", query = "中文一")

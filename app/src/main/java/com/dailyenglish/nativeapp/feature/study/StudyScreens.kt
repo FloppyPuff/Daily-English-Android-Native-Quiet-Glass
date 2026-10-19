@@ -58,27 +58,25 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+// The study queue is merged; the only place the two tracks remain a choice is
+// the statistics view, where they act as filters over the same history.
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ExamSwitch(exam: String, onExam: (String) -> Unit, modifier: Modifier = Modifier) {
+fun StatsExamSwitch(exam: String, onExam: (String) -> Unit, modifier: Modifier = Modifier) {
   SingleChoiceSegmentedButtonRow(modifier) {
-    SegmentedButton(
-      selected = exam == "cet6",
-      onClick = { onExam("cet6") },
-      shape = SegmentedButtonDefaults.itemShape(0, 2),
-    ) { Text("CET-6") }
-    SegmentedButton(
-      selected = exam == "postgrad",
-      onClick = { onExam("postgrad") },
-      shape = SegmentedButtonDefaults.itemShape(1, 2),
-    ) { Text("考研英语") }
+    listOf("all" to "全部", "cet6" to "CET-6", "postgrad" to "考研英语").forEachIndexed { index, (value, label) ->
+      SegmentedButton(
+        selected = exam == value,
+        onClick = { onExam(value) },
+        shape = SegmentedButtonDefaults.itemShape(index, 3),
+      ) { Text(label) }
+    }
   }
 }
 
 @Composable
 fun TodayScreen(
   ui: StudyUiState,
-  onExam: (String) -> Unit,
   onStartWords: () -> Unit,
   onReview: () -> Unit,
   onSentences: () -> Unit,
@@ -99,9 +97,8 @@ fun TodayScreen(
     verticalArrangement = Arrangement.spacedBy(18.dp),
   ) {
     item {
-      Text(day, style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
+      Text("$day · CET-6 + 考研", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
     }
-    item { ExamSwitch(ui.progress.settings.exam, onExam) }
     item {
       Card(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.82f)),
@@ -221,7 +218,6 @@ private fun planCaption(step: PlanStep): String = when {
 @Composable
 fun PracticeScreen(
   ui: StudyUiState,
-  onExam: (String) -> Unit,
   onWords: () -> Unit,
   onSentences: () -> Unit,
   onReview: () -> Unit,
@@ -236,7 +232,6 @@ fun PracticeScreen(
     contentPadding = PaddingValues(horizontal = 20.dp, vertical = 18.dp),
     verticalArrangement = Arrangement.spacedBy(14.dp),
   ) {
-    item { ExamSwitch(ui.progress.settings.exam, onExam) }
     item {
       PracticeCard(
         title = "词汇练习",
@@ -342,11 +337,6 @@ fun ReviewScreen(ui: StudyUiState, onStart: () -> Unit) {
               Text(word.id, style = MaterialTheme.typography.titleMedium.copy(fontFamily = FontFamily.Serif))
               Text(word.meaning, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
-            Text(
-              "${word.exams.size} 个方向",
-              style = MaterialTheme.typography.labelSmall,
-              color = MaterialTheme.colorScheme.primary,
-            )
           }
         }
       }

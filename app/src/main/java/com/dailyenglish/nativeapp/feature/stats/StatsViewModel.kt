@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.dailyenglish.nativeapp.core.learning.LearningEngine
 import com.dailyenglish.nativeapp.core.learning.Statistics
 import com.dailyenglish.nativeapp.data.content.ContentRepository
+import com.dailyenglish.nativeapp.data.content.SentenceDto
 import com.dailyenglish.nativeapp.data.content.WordDto
 import com.dailyenglish.nativeapp.data.repository.ProgressRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +20,7 @@ data class StatsUiState(
   val loading: Boolean = true,
   val error: String = "",
   val stats: Statistics? = null,
-  val exam: String = "cet6",
+  val statsExam: String = "all",
 )
 
 @HiltViewModel
@@ -30,6 +31,7 @@ class StatsViewModel @Inject constructor(
   private val _state = MutableStateFlow(StatsUiState())
   val state: StateFlow<StatsUiState> = _state.asStateFlow()
   private var words: List<WordDto>? = null
+  private var sentences: List<SentenceDto>? = null
 
   init {
     viewModelScope.launch {
@@ -37,7 +39,6 @@ class StatsViewModel @Inject constructor(
     }
     viewModelScope.launch {
       progressRepository.state.collect {
-        _state.update { current -> current.copy(exam = it.settings.exam) }
         refresh()
       }
     }
@@ -50,26 +51,24 @@ class StatsViewModel @Inject constructor(
     }
   }
 
-  fun setExam(exam: String) {
-    val settings = progressRepository.state.value.settings
-    val next = if (exam == "postgrad") "postgrad" else "cet6"
-    if (settings.exam == next) return
-    viewModelScope.launch {
-      progressRepository.updateSettings(settings.dailyGoal, settings.sentenceGoal, settings.focusMinutes, next)
-      refresh()
-    }
+  fun setStatsExam(exam: String) {
+    val next = exam.takeIf { it == "cet6" || it == "postgrad" } ?: "all"
+    if (_state.value.statsExam == next) return
+    _state.value = _state.value.copy(statsExam = next)
+    refresh()
   }
 
   private suspend fun load() {
     runCatching {
       val content = contentRepository.load()
       words = content.words
+      sentences = content.sentences
       progressRepository.load()
       val state = progressRepository.state.value
       _state.value = StatsUiState(
         loading = false,
-        stats = LearningEngine.statistics(state, content.words),
-        exam = state.settings.exam,
+        stats = LearningEngine.statistics(state, content.words, sentences = content.sentences, exam = _state.value.statsExam),
+        statsExam = _state.value.statsExam,
       )
     }.onFailure {
       _state.update { it.copy(loading = false, error = "学习记录读取失败，请重试") }
@@ -82,8 +81,7 @@ class StatsViewModel @Inject constructor(
     _state.value = _state.value.copy(
       loading = false,
       error = "",
-      stats = LearningEngine.statistics(state, bank),
-      exam = state.settings.exam,
+      stats = LearningEngine.statistics(state, bank, sentences = sentences.orEmpty(), exam = _state.value.statsExam),
     )
   }
 }

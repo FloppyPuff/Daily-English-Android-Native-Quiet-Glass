@@ -56,6 +56,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import com.dailyenglish.nativeapp.core.learning.bestTier
 import com.dailyenglish.nativeapp.data.content.WordDto
 import com.dailyenglish.nativeapp.theme.NumberStyle
 import com.dailyenglish.nativeapp.theme.WordHeadwordStyle
@@ -126,7 +127,6 @@ fun WordsScreen(
       else -> Column(Modifier.weight(1f).verticalScroll(rememberScrollState())) {
         WordCard(
           word = current,
-          exam = ui.progress.settings.exam,
           index = ui.wordIndex,
           total = ui.wordQueue.size,
           revealed = ui.revealed,
@@ -157,7 +157,6 @@ fun WordsScreen(
 @Composable
 private fun WordCard(
   word: WordDto,
-  exam: String,
   index: Int,
   total: Int,
   revealed: Boolean,
@@ -173,7 +172,7 @@ private fun WordCard(
   onToggleSave: () -> Unit,
   onSpeak: () -> Unit,
 ) {
-  val tier = word.tiers[exam].orEmpty()
+  val tier = bestTier(word)
   Card(
     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
     shape = MaterialTheme.shapes.extraLarge,
@@ -305,9 +304,8 @@ private fun LibraryView(
   var query by rememberSaveable { mutableStateOf("") }
   var filter by rememberSaveable { mutableStateOf("all") }
   var page by rememberSaveable { mutableIntStateOf(0) }
-  val exam = ui.progress.settings.exam
-  val words = remember(ui.content, exam, query, filter) {
-    val all = ui.content?.words.orEmpty().filter { it.exams.contains(exam) }
+  val words = remember(ui.content, query, filter) {
+    val all = ui.content?.words.orEmpty()
     val normalized = query.trim().lowercase()
     all.filter { word ->
       (normalized.isBlank() || listOf(word.id, word.meaning, word.pos.orEmpty(), word.topic.orEmpty(), word.senses.joinToString(" ")).joinToString(" ").lowercase().contains(normalized)) &&

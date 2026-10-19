@@ -106,7 +106,7 @@ class StudyViewModel @Inject constructor(
     val current = _state.value
     val content = current.content ?: return
     val state = current.progress
-    val stats = LearningEngine.statistics(state, content.words)
+    val stats = LearningEngine.statistics(state, content.words, sentences = content.sentences)
     val plan = LearningEngine.dailyPlan(state, content.words, content.sentences)
     val focusTarget = state.settings.focusMinutes * 60
     _state.update {
@@ -227,17 +227,8 @@ class StudyViewModel @Inject constructor(
     if (!tts.speak(word.id)) emit("英语朗读暂不可用，请检查系统英语语音包。")
   }
 
-  fun setExam(exam: String) {
-    val settings = _state.value.progress.settings
-    viewModelScope.launch {
-      progressRepository.updateSettings(settings.dailyGoal, settings.sentenceGoal, settings.focusMinutes, exam)
-    }
-  }
-
   fun sentenceBank(): List<SentenceDto> {
-    val current = _state.value
-    val content = current.content ?: return emptyList()
-    return content.sentences.filter { it.exams.contains(current.progress.settings.exam) }
+    return _state.value.content?.sentences.orEmpty()
   }
 
   fun currentSentence(): SentenceDto? {

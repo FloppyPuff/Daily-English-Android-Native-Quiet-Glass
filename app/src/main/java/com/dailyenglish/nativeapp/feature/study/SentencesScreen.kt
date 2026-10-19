@@ -66,13 +66,13 @@ fun SentencesScreen(
     StudyLoading()
     return
   }
-  val bank = remember(ui.content, ui.progress.settings.exam) {
-    ui.content?.sentences.orEmpty().filter { it.exams.contains(ui.progress.settings.exam) }
+  val bank = remember(ui.content) {
+    ui.content?.sentences.orEmpty()
   }
   val current = ui.sentenceId?.let { ui.content?.sentenceById?.get(it) } ?: bank.firstOrNull()
   var catalogOpen by remember { mutableStateOf(false) }
   if (current == null) {
-    StudyError("这个方向暂时没有句子")
+    StudyError("暂时没有句子")
     return
   }
   val index = bank.indexOfFirst { it.id == current.id }

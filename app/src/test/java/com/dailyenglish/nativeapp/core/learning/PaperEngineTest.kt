@@ -87,5 +87,7 @@ class PaperEngineTest {
     assertEquals(listOf(2), record.wrong)
     assertEquals(listOf("abandon"), record.words)
     assertEquals(1, next.events.count { it.type == "paper" && it.correct == 1 && it.total == 2 })
+    // Papers are 考研 content even when the legacy settings value says otherwise.
+    assertEquals("postgrad", next.events.last().exam)
   }
 }

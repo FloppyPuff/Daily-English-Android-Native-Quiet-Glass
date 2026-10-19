@@ -38,7 +38,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dailyenglish.nativeapp.core.learning.HeatCell
 import com.dailyenglish.nativeapp.core.learning.Statistics
 import com.dailyenglish.nativeapp.core.learning.WeekSlice
-import com.dailyenglish.nativeapp.feature.study.ExamSwitch
+import com.dailyenglish.nativeapp.feature.study.StatsExamSwitch
 import com.dailyenglish.nativeapp.feature.study.StudyError
 import com.dailyenglish.nativeapp.feature.study.StudyLoading
 import com.dailyenglish.nativeapp.theme.NumberStyle
@@ -65,19 +65,24 @@ fun StatsScreen(
     modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(horizontal = 20.dp, vertical = 18.dp),
     verticalArrangement = Arrangement.spacedBy(14.dp),
   ) {
-    ExamSwitch(ui.exam, viewModel::setExam)
+    StatsExamSwitch(ui.statsExam, viewModel::setStatsExam)
     StatGrid(stats)
     BoxWithConstraints {
       val twoPane = maxWidth >= 720.dp
+      val examLabel = when (ui.statsExam) {
+        "cet6" -> "CET-6"
+        "postgrad" -> "考研英语"
+        else -> "综合词库"
+      }
       if (twoPane) {
         Row(horizontalArrangement = Arrangement.spacedBy(14.dp)) {
           WeekPanel(stats.week, Modifier.weight(1f))
-          MasteryPanel(stats, Modifier.weight(1f))
+          MasteryPanel(stats, examLabel, Modifier.weight(1f))
         }
       } else {
         Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
           WeekPanel(stats.week, Modifier.fillMaxWidth())
-          MasteryPanel(stats, Modifier.fillMaxWidth())
+          MasteryPanel(stats, examLabel, Modifier.fillMaxWidth())
         }
       }
     }
@@ -90,7 +95,7 @@ private fun StatGrid(stats: Statistics) {
   val items = listOf(
     StatItem("累计已学", "${stats.learned}", "词", "当前词库共 ${stats.total} 词"),
     StatItem("较熟悉词汇", "${stats.mastered}", "词", "连续 3 次记住或很熟悉"),
-    StatItem("累计学习", "${stats.activeDays}", "天", "两个考试方向合计"),
+    StatItem("累计学习", "${stats.activeDays}", "天", "全部学习记录"),
     StatItem("累计专注", "${stats.totalMinutes}", "分钟", "今天 ${stats.todayMinutes} 分钟"),
     StatItem("真题练习", "${stats.paperTotal}", "题", "答对 ${stats.paperCorrect} 题 · 今天 ${stats.todayPapers} 组"),
   )
@@ -172,7 +177,7 @@ private fun WeekPanel(week: List<WeekSlice>, modifier: Modifier) {
 }
 
 @Composable
-private fun MasteryPanel(stats: Statistics, modifier: Modifier) {
+private fun MasteryPanel(stats: Statistics, examLabel: String, modifier: Modifier) {
   val percent = if (stats.total == 0) 0 else (stats.learned * 100.0 / stats.total).roundToInt()
   Card(
     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
@@ -183,7 +188,8 @@ private fun MasteryPanel(stats: Statistics, modifier: Modifier) {
   ) {
     Column(Modifier.padding(18.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
       Row(verticalAlignment = Alignment.CenterVertically) {
-        Text("词汇掌握情况", style = MaterialTheme.typography.titleMedium)
+        Text("词汇掌握情况", style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(1f))
+        Text(examLabel, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
       }
       Row(verticalAlignment = Alignment.Bottom) {
         Text("$percent", style = MaterialTheme.typography.displaySmall.copy(fontFamily = FontFamily.Monospace))

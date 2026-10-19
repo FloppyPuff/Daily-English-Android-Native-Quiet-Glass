@@ -1,12 +1,13 @@
 # Daily English Glass（Quiet Glass）
 
-Daily English 的 **Quiet Glass** 视觉原型，独立于稳定版 `native-android`。
-功能基线来自原生版 1.0.2；本工程只重构 UI，不改学习、真题、统计、备份与同步逻辑。
+Daily English 的 **Quiet Glass** 版本，独立于稳定版 `native-android`。
+功能基线来自原生版 1.0.2；在玻璃视觉之上，把 CET-6 与考研词库/句子合并为综合学习，
+统计页保留「全部 / CET-6 / 考研」筛选。
 
 - Application ID：`com.dailyenglish.quietglass`（与稳定版并行安装）
 - Kotlin package / namespace：`com.dailyenglish.nativeapp`
 - 桌面名：`Daily English Glass`
-- 版本：`1.1.0-quietglass`（versionCode 1）
+- 版本：`1.2.0-quietglass`（versionCode 2）
 - 稳定版：`../native-android`，1.0.2 / `v1.0.2`
 
 ## Quiet Glass 设计
@@ -38,9 +39,11 @@ cd Quiet-Glass-Daily-English
 
 ## 当前状态
 
-- 功能与 1.0.2 一致；JVM 49/49 通过。
-- 原型 APK：
-  `C:\Users\fjh28\Desktop\Daily-English-Glass-1.1.0-quietglass-debug.apk`
-  SHA-256 `3e8637f84009858926801f6d3cf2cd593015f25f11995412ef70f849a34463a0`
+- CET-6 与考研词库/句子合并学习；统计保留方向筛选，历史进度共享。
+- JVM 52/52 通过；APK 已构建并上传服务器。
+- APK：
+  `C:\Users\fjh28\Desktop\Daily-English-Glass-1.2.0-quietglass-debug.apk`
+  SHA-256 `9c27c4a59cf7b12783cb1397fff32dbcd2be5f9f1b23fbbede4afa490dae7a1c`
+- 服务器路径：`/var/www/daily-english/web/Daily-English-Glass-1.2.0-quietglass-debug.apk`
 - 真机安装与视觉复核待设备重新连接。
 - B 方案仅存档，未实现。

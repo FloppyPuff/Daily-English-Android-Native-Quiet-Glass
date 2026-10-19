@@ -24,6 +24,15 @@ fun isWordId(id: String): Boolean = WORD_ID.matches(id)
 fun isSentenceId(id: String): Boolean = SENTENCE_ID.matches(id)
 fun isPaperKey(id: String): Boolean = PAPER_KEY.matches(id)
 
+private val TIER_RANK = mapOf("高频" to 3, "中频" to 2, "低频" to 1)
+
+// A merged card shows the strongest tier either exam assigned instead of hiding
+// the word's relevance in the other track.
+fun bestTier(word: WordDto): String = listOf("cet6", "postgrad")
+  .mapNotNull { word.tiers[it] }
+  .maxByOrNull { TIER_RANK[it] ?: 0 }
+  .orEmpty()
+
 fun localDay(at: Long = System.currentTimeMillis()): String {
   val calendar = Calendar.getInstance().apply { timeInMillis = at }
   return String.format(
@@ -144,8 +153,10 @@ object LearningEngine {
     )
   }
 
+  // The word bank is studied as one merged CET-6 + 考研 track. Records are keyed
+  // by headword, so a shared word already carries one review history.
   fun buildQueue(words: List<WordDto>, state: AppState, mode: String, at: Long = System.currentTimeMillis()): List<WordDto> {
-    val bank = words.filter { it.exams.contains(state.settings.exam) }
+    val bank = words
     val filtered = when (mode) {
       "review" -> bank.filter { state.records[it.id]?.due?.let { due -> due <= at } == true }
       "mistakes" -> {
@@ -166,9 +177,31 @@ object LearningEngine {
 
   private fun paperHits(word: WordDto): Int = word.hits.values.sum()
 
-  fun statistics(state: AppState, words: List<WordDto>, at: Long = System.currentTimeMillis()): Statistics {
+  // Stats can be viewed across both tracks or through one of them. A word or
+  // sentence belongs to a track by its own exam tags, not by whichever track was
+  // active when it was practiced. Focus time is not directional.
+  fun statistics(
+    state: AppState,
+    words: List<WordDto>,
+    at: Long = System.currentTimeMillis(),
+    sentences: List<SentenceDto> = emptyList(),
+    exam: String = "all",
+  ): Statistics {
     val today = localDay(at)
-    val relevant = state.events.filter { it.exam == state.settings.exam }
+    val wordById = words.associateBy { it.id }
+    val sentenceById = sentences.associateBy { it.id }
+    val inTrack: (StudyEvent) -> Boolean = { event ->
+      when {
+        exam == "all" || event.type == "focus" -> true
+        event.type == "word" -> wordById[event.id]?.exams?.contains(exam) ?: (event.exam == exam)
+        event.type == "sentence" -> sentenceById[event.id]?.exams?.contains(exam) ?: (event.exam == exam)
+        // All shipped papers are 考研英语, including older events tagged with the
+        // study direction that was active at the time.
+        event.type == "paper" -> exam == "postgrad"
+        else -> event.exam == exam
+      }
+    }
+    val relevant = state.events.filter(inTrack)
     val todayEvents = relevant.filter { localDay(it.at) == today }
     val unique = { list: List<StudyEvent>, type: String -> list.filter { it.type == type }.mapNotNull { it.id }.toSet().size }
     val active = state.events.filter { it.type != "focus" }.map { localDay(it.at) }.toMutableSet()
@@ -182,7 +215,7 @@ object LearningEngine {
       streak++
       cursor.add(Calendar.DAY_OF_MONTH, -1)
     }
-    val bank = words.filter { it.exams.contains(state.settings.exam) }
+    val bank = if (exam == "all") words else words.filter { it.exams.contains(exam) }
     val learned = bank.filter { state.records[it.id] != null }
     val week = (0 until 7).map { i ->
       val dayAt = addDays(at, -6 + i)
@@ -222,7 +255,7 @@ object LearningEngine {
       totalMinutes = relevant.filter { it.type == "focus" }.sumOf { it.seconds ?: 0 } / 60,
       learned = learned.size,
       mastered = learned.count { (state.records[it.id]?.streak ?: 0) >= 3 },
-      due = buildQueue(words, state, "review", at).size,
+      due = bank.count { state.records[it.id]?.due?.let { dueAt -> dueAt <= at } == true },
       difficult = learned.count { state.records[it.id]?.difficult == true },
       total = bank.size,
       streak = streak,
@@ -234,7 +267,9 @@ object LearningEngine {
 
   fun dailyPlan(state: AppState, words: List<WordDto>, sentences: List<SentenceDto>, at: Long = System.currentTimeMillis()): DailyPlan {
     val today = localDay(at)
-    val events = state.events.filter { it.exam == state.settings.exam && localDay(it.at) == today }
+    // Today's plan is one merged queue, so practice from either track counts
+    // toward the same review, new-word and translation targets.
+    val events = state.events.filter { localDay(it.at) == today }
     val review = buildQueue(words, state, "review", at)
     val dueIds = review.map { it.id }.toSet()
     val reviewedIds = events.filter { it.type == "word" && it.isNew != true }.mapNotNull { it.id }.toSet()
@@ -243,7 +278,7 @@ object LearningEngine {
     val unseen = buildQueue(words, state, "new", at)
     val newTarget = minOf(state.settings.dailyGoal, newDone + unseen.size)
     val newWords = unseen.take(max(0, newTarget - newDone))
-    val bank = sentences.filter { it.exams.contains(state.settings.exam) }
+    val bank = sentences
     val sentenceIds = events.filter { it.type == "sentence" }.mapNotNull { it.id }.toSet()
     val sentenceDone = bank.count { sentenceIds.contains(it.id) }
     val sentenceTarget = minOf(state.settings.sentenceGoal, bank.size)

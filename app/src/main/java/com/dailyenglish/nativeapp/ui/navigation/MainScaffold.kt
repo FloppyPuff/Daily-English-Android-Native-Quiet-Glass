@@ -214,7 +214,6 @@ fun MainNavigation(
           entry<Today> {
             TodayScreen(
               ui = ui,
-              onExam = studyViewModel::setExam,
               onStartWords = { backStack.add(Words("new")) },
               onReview = { backStack.add(Words("review")) },
               onSentences = { backStack.add(Sentences) },
@@ -223,7 +222,6 @@ fun MainNavigation(
           entry<Practice> {
             PracticeScreen(
               ui = ui,
-              onExam = studyViewModel::setExam,
               onWords = { backStack.add(Words("new")) },
               onSentences = { backStack.add(Sentences) },
               onReview = { backStack.add(Review) },

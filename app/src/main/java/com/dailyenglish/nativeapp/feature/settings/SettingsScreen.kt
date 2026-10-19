@@ -48,7 +48,6 @@ import com.dailyenglish.nativeapp.core.sync.BackupCodec
 import com.dailyenglish.nativeapp.data.repository.AuthState
 import com.dailyenglish.nativeapp.data.repository.SyncMode
 import com.dailyenglish.nativeapp.data.repository.SyncStatus
-import com.dailyenglish.nativeapp.feature.study.ExamSwitch
 import com.dailyenglish.nativeapp.theme.glassBorderBrush
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -66,7 +65,6 @@ fun SettingsScreen(
   var dailyGoal by rememberSaveable { mutableStateOf(state.settings.dailyGoal.toString()) }
   var sentenceGoal by rememberSaveable { mutableStateOf(state.settings.sentenceGoal.toString()) }
   var focusMinutes by rememberSaveable { mutableStateOf(state.settings.focusMinutes.toString()) }
-  var exam by rememberSaveable { mutableStateOf(state.settings.exam) }
   var currentPassword by rememberSaveable { mutableStateOf("") }
   var nextPassword by rememberSaveable { mutableStateOf("") }
 
@@ -74,7 +72,6 @@ fun SettingsScreen(
     dailyGoal = state.settings.dailyGoal.toString()
     sentenceGoal = state.settings.sentenceGoal.toString()
     focusMinutes = state.settings.focusMinutes.toString()
-    exam = state.settings.exam
   }
   LaunchedEffect(Unit) {
     viewModel.clearPasswordError()
@@ -126,7 +123,6 @@ fun SettingsScreen(
     contentPadding = PaddingValues(horizontal = 20.dp, vertical = 18.dp),
     verticalArrangement = Arrangement.spacedBy(16.dp),
   ) {
-    item { ExamSwitch(exam, { exam = it }) }
     item {
       Card(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
@@ -170,7 +166,7 @@ fun SettingsScreen(
                 dailyGoal = dailyGoal.toIntOrNull() ?: state.settings.dailyGoal,
                 sentenceGoal = sentenceGoal.toIntOrNull() ?: state.settings.sentenceGoal,
                 focusMinutes = focusMinutes.toIntOrNull() ?: state.settings.focusMinutes,
-                exam = exam,
+                exam = state.settings.exam,
               )
             },
             enabled = !state.busy,

@@ -37,7 +37,6 @@ object NotebookEngine {
     val paperWords = if (mistakes) state.papers.values.flatMap { it.words }.toSet() else emptySet()
     val needle = query.trim().lowercase()
     val notebookWords = words.asSequence()
-      .filter { it.exams.contains(state.settings.exam) }
       .mapNotNull { word ->
         val saved = state.savedWords.contains(word.id)
         val difficult = state.records[word.id]?.difficult == true
@@ -49,7 +48,6 @@ object NotebookEngine {
       .take(LIMIT)
       .toList()
     val notebookSentences = sentences.asSequence()
-      .filter { it.exams.contains(state.settings.exam) }
       .mapNotNull { sentence ->
         val saved = state.savedSentences.contains(sentence.id)
         val rating = state.sentenceRecords[sentence.id]?.rating.orEmpty()
